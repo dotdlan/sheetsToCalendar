@@ -5,7 +5,8 @@ function myFunction() {
   var calendarId = spreadsheet.getRange("I2").getValue();
   // set the active calendar with the calendar id
   var eventCal = CalendarApp.getCalendarById(calendarId);
-  // set the range the script should run in
+  // set the range of cells the script should run in
+  // need to look at method that will do this dynamically
   var timeOffReqs = spreadsheet.getRange("B19:H21");
   // The row and column here are relative to the range set in timeOffReqs. 
   // so cell 1 and row 1 would be whatever the first cell is defined in timeOffReqs
@@ -24,7 +25,6 @@ function myFunction() {
     const sheetEventDuration = sheetEndTime - sheetStartTime
 
     let cell = timeOffReqs.getCell(currentRow, eventIdCol)
-       
     // let's check to see if we've already created this event 
     // by checking the sheet for a value in cell (currentRow, eventIdCol)
     if (eventCal.getEventById(cell.getValue())){
@@ -49,11 +49,12 @@ function myFunction() {
         cell.setValue(event.getId())
       }
     } else {
-      console.log('eventcal cell no exist, make new event')
+      console.log(`eventcal cell doesn't exist, make new event`)
         let event = eventCal.createAllDayEvent(sheetRequester, sheetStartTime, sheetEndTime);
         cell.setValue(event.getId())
 
     }
+    // might consider a loop that parses row by row rather than using this method
     currentRow = currentRow + 1
   }
 }
